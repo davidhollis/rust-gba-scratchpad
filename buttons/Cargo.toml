@@ -1,0 +1,10 @@
+[package]
+name = "buttons"
+version = "0.1.0"
+authors = ["David Hollis <david@hollis.computer>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+gba = { version = "0.5.2" }

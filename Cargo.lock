@@ -3,19 +3,19 @@
 version = 3
 
 [[package]]
+name = "buttons"
+version = "0.1.0"
+dependencies = [
+ "gba",
+]
+
+[[package]]
 name = "gba"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7e7e9920f61e17884e22aac1a19a74f912ece70d1a664a4715d269ca2fba3397"
 dependencies = [
  "voladdress",
-]
-
-[[package]]
-name = "rust-gba-testing"
-version = "0.1.0"
-dependencies = [
- "gba",
 ]
 
 [[package]]

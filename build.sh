@@ -1,5 +1,13 @@
 #! /bin/bash
 
+set -euo pipefail
+
 cargo build --release
-arm-none-eabi-objcopy -O binary target/thumbv4t-none-eabi/release/rust-gba-testing target/buttons.gba
-gbafix target/buttons.gba
+
+mkdir -p target/gba
+for product in $(cargo ws list); do
+  rom_path="target/gba/${product}.gba"
+  arm-none-eabi-objcopy -O binary "target/thumbv4t-none-eabi/release/${product}" "$rom_path"
+  gbafix "$rom_path"
+  echo "> Created $rom_path"
+done
