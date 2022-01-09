@@ -2,4 +2,6 @@
 
 members = [
   "buttons",
+  "01-running",
+  "lib/*",
 ]
