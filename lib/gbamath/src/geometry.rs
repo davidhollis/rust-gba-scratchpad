@@ -31,6 +31,6 @@ impl BoundingBox {
 
     #[inline]
     pub fn bottom(&self) -> UFixed8 {
-        self.center.y - self.half_size.y
+        self.center.y + self.half_size.y
     }
 }
