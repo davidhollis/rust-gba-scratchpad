@@ -13,4 +13,24 @@ impl BoundingBox {
             (self.center.y.abs_diff(other.center.y) > self.half_size.y + other.half_size.y)
         )
     }
+
+    #[inline]
+    pub fn left(&self) -> UFixed8 {
+        self.center.x - self.half_size.x
+    }
+
+    #[inline]
+    pub fn right(&self) -> UFixed8 {
+        self.center.x + self.half_size.x
+    }
+
+    #[inline]
+    pub fn top(&self) -> UFixed8 {
+        self.center.y - self.half_size.y
+    }
+
+    #[inline]
+    pub fn bottom(&self) -> UFixed8 {
+        self.center.y - self.half_size.y
+    }
 }
