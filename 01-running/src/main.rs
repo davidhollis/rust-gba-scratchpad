@@ -9,6 +9,7 @@ use gbamath::Vec2D;
 
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
+    mode3::dma3_clear_to(Color::from_rgb(31,0,0));
     loop {}
 }
 
@@ -30,6 +31,8 @@ struct Player {
 
 impl Player {
     const COLOR: Color = Color::from_rgb(0, 0, 31);
+    const CENTER_COLOR: Color = Color::from_rgb(0, 31, 0);
+    const ANCHOR_COLOR: Color = Color::from_rgb(31, 31, 0);
 
     // Collision State Masks
     const TOP_COLLISION_LAST_FRAME: u8    = 0b1000_0000;
@@ -66,20 +69,29 @@ impl Player {
                 mode3::bitmap_xy(x.into(), y.into()).write(Player::COLOR);
             }
         }
+        let center_x: u16 = self.collision_box.center.x.into();
+        let center_y: u16 = self.collision_box.center.y.into();
+        mode3::bitmap_xy(center_x.into(), center_y.into()).write(Player::CENTER_COLOR);
+        let player_x: u16 = self.current_position.x.into();
+        let player_y: u16 = self.current_position.y.into();
+        mode3::bitmap_xy(player_x.into(), player_y.into()).write(Player::ANCHOR_COLOR);
     }
 }
 
-const BACKGROUND_COLOR: Color = Color::from_rgb(31, 31, 31);
+const BACKGROUND_COLOR: Color = Color::from_rgb(0, 0, 0);
 
 #[no_mangle]
 fn main() -> ! {
+    const SETUP_DISPLAY: DisplayControl = DisplayControl::new().with_display_mode(3).with_display_bg2(true);
+    DISPCNT.write(SETUP_DISPLAY);
+
     let mut player: Player = Player {
-        old_position: Vec2D { x: UFixed8::ZERO, y: 160u16.into() },
-        current_position: Vec2D { x: UFixed8::ZERO, y: UFixed8::ZERO },
+        old_position: Vec2D { x: UFixed8::ZERO, y: 159u16.into() },
+        current_position: Vec2D { x: UFixed8::ZERO, y: 159u16.into() },
         old_velocity: Vec2D { x: SFixed8::ZERO, y: SFixed8::ZERO },
         current_velocity: Vec2D { x: SFixed8::ZERO, y: SFixed8::ZERO },
         collision_box: BoundingBox {
-            center: Vec2D { x: 8u16.into(), y: 144u16.into() },
+            center: Vec2D { x: UFixed8::ZERO, y: UFixed8::ZERO },
             half_size: Vec2D { x: 8u16.into(), y: 16u16.into() },
         },
         box_offset: Vec2D { x: 8i16.into(), y: (-16i16).into() },
@@ -87,12 +99,12 @@ fn main() -> ! {
         inputs: KeyMonitor::new(),
     };
 
+    mode3::dma3_clear_to(BACKGROUND_COLOR);
     loop {
         spin_until_vdraw();
         spin_until_vblank();
 
         player.update();
-        mode3::dma3_clear_to(BACKGROUND_COLOR);
         player.draw();
     }
 }
