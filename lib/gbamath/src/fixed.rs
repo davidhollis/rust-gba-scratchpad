@@ -1,4 +1,4 @@
-use core::ops::{Add, Sub, Mul};
+use core::ops::{ Add, Sub, Mul, Neg };
 
 #[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 pub struct UFixed8(u16);
@@ -7,6 +7,11 @@ impl UFixed8 {
     pub const FRACTION_BITS: u16 = 8;
 
     pub const ZERO: UFixed8 = UFixed8(0u16);
+
+    #[inline]
+    pub const fn constant(v: u16) -> UFixed8 {
+        UFixed8(v << UFixed8::FRACTION_BITS)
+    }
 
     pub fn abs_diff(self, other: UFixed8) -> UFixed8 {
         if self < other {
@@ -76,8 +81,9 @@ impl Mul<u16> for UFixed8 {
 }
 
 impl From<u16> for UFixed8 {
+    #[inline]
     fn from(v: u16) -> UFixed8 {
-        UFixed8(v << UFixed8::FRACTION_BITS)
+        UFixed8::constant(v)
     }
 }
 
@@ -95,6 +101,11 @@ impl SFixed8 {
     pub const SCALE: u16 = 1 << SFixed8::FRACTION_BITS;
 
     pub const ZERO: SFixed8 = SFixed8(0i16);
+
+    #[inline]
+    pub const fn constant(v: i16) -> SFixed8 {
+        SFixed8(v << SFixed8::FRACTION_BITS)
+    }
 }
 
 impl Add for SFixed8 {
@@ -125,9 +136,17 @@ impl Mul<i16> for SFixed8 {
     }
 }
 
+impl Neg for SFixed8 {
+    type Output = Self;
+    fn neg(self) -> Self {
+        SFixed8(-self.0)
+    }
+}
+
 impl From<i16> for SFixed8 {
+    #[inline]
     fn from(v: i16) -> SFixed8 {
-        SFixed8(v << SFixed8::FRACTION_BITS)
+        SFixed8::constant(v)
     }
 }
 
