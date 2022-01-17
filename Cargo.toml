@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-  "buttons",
+  "00-buttons",
   "01-running",
   "lib/*",
 ]
